@@ -6,13 +6,15 @@
 /*   By: rcoetzer <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/12 10:04:29 by rcoetzer          #+#    #+#             */
-/*   Updated: 2019/06/12 12:21:33 by rcoetzer         ###   ########.fr       */
+/*   Updated: 2019/06/13 11:44:04 by rcoetzer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./get_next_line.h"
 #include <fcntl.h>
 #include <stdio.h>
+
+void    tstmultiple(char **argv);
 
 int		main(int argc, char **argv)
 {
@@ -47,5 +49,38 @@ int		main(int argc, char **argv)
 		close (fd[fdcnt]);
 		fdcnt++;
 	}
+	if (argc >= 3)
+		tstmultiple(argv);
 	return (1);
+}
+void	tstmultiple(char **argv)
+{
+	int fd1;
+	int fd2;
+	int ret;
+	char *line = "\0";
+	int i = 0;
+
+	fd1 = open(argv[1], O_RDONLY);
+	fd2 = open(argv[2], O_RDONLY);
+	printf("\e[38;5;196m----------Reading 2 files at a time----------\e[39\n");	
+	printf("\e[32mFD: %d    FILE: %s\e[39m\n", fd1, argv[1]);
+	while ((ret = get_next_line(fd1, &line)) > 0)
+	{
+		printf("%s\n", line);
+		free(line);
+		i++;
+	}
+	i = 0;
+	ft_strclr(line);
+	printf("\e[32mFD: %d    FILE: %s\e[39m\n", fd2, argv[2]);
+	while ((ret = get_next_line(fd2, &line)) > 0)
+	{
+		printf("%s\n", line);
+		free(line);
+		i++;
+	}
+
+	close(fd1);
+	close(fd2);
 }
