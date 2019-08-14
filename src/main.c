@@ -6,7 +6,7 @@
 /*   By: rcoetzer <rcoetzer@42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/14 09:50:07 by rcoetzer          #+#    #+#             */
-/*   Updated: 2019/08/14 10:11:32 by rcoetzer         ###   ########.fr       */
+/*   Updated: 2019/08/14 12:17:32 by rcoetzer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,7 @@ int		multicheck(int argc, char **argv)
 	fdcnt = 1;
 	while (fdcnt <= argc -1)
 	{
-		fd[fdcnt] = open(argv[fdcnt], O_RDONLY);
-		if (fd[fdcnt] < 0)
-		{
-			printf("\e[91m[ERROR]	Could not read file: %s\n", argv[fdcnt]);
-			return (-1);
-		}
-		if ((ret = get_next_line(fd[fdcnt], &line)) > 0)
+		while ((ret = get_next_line(fd[fdcnt], &line)) > 0)
 		{
 			printf("%s\n", line);
 			free(line);
