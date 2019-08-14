@@ -1,39 +1,51 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: rcoetzer <marvin@42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/06/12 10:18:08 by rcoetzer          #+#    #+#              #
-#    Updated: 2019/06/12 11:22:05 by rcoetzer         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = GNL_TST
-cc = gcc
-CFLAGS = -Wall -Werror -Wextra
+CC = gcc
+SRC =	main.c\
+		get_next_line.c
 
-LIBFT := libft/libft.a
+INC =	-I ./
 
-SRC = main.c \
-      get_next_line.c
+LIBS = libft/libft.a
 
+FLAGS = -Wall -Werror -Wextra
 
-all: $(NAME)
+SRC_DIR = src
+OBJ_DIR = obj
+OBJ			= $(SRC:.c=.o)
+SRCS		=	$(addprefix $(SRC_DIR)/, $(SRC))
+OBJS		=	$(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
-$(LIBFT):
-	@make -C libft
+all: directory $(NAME)
 
-$(NAME):
-	@$(CC) $(SRC) $(LIBFT) $(GNL) $(CFLAGS) -o $(NAME)
+$(NAME): $(OBJ_DIR) $(OBJS) libft.a
+	@$(CC) $(OBJS) -o $(NAME) $(FLAGS) $(LIBS)
+	@printf "\e[33m[COMPILED] \e[32m%41s\e[39m\n" "$(NAME)"
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c 
+	@$(CC) $(FLAGS) -c $^ -o $@ $(INC)
+
+directory: $(OBJ_DIR)
+
+$(OBJ_DIR):
+	@printf "\e[33m[COMPILING] \e[32;1m%40s\n\e[39m"  "$(NAME)"
+	@mkdir -p $(OBJ_DIR)
 
 clean:
-	@rm -rf *.o
+	@printf "\e[31m %30s \e[39m\n" "[CLEANING $(NAME)]" 
+	@rm -rf $(OBJ)
+	@rm -rf $(OBJ_DIR)
 
 fclean: clean
-	@make fclean -C libft
-	@rm -rf $(NAME)
+	@make -C libft fclean
+	@rm -f $(NAME)
 
 re: fclean all
-.PHONY: clean fclean all re
+
+reset: fclean
+	@rm -rf libft
+	@rm -rf src/get_next_line.c
+	@rm -rf get_next_line.h
+
+libft.a: libft
+	@make -C libft
+
