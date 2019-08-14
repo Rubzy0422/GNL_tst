@@ -10,28 +10,30 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME= tst
+NAME = GNL_TST
 cc = gcc
 CFLAGS = -Wall -Werror -Wextra
 
-LIBFT := ./libft/libft.a
-GNL = ./get_next_line.c
-SRC = main.c
+LIBFT := libft/libft.a
 
-make:
-	@$(MAKE) -C libft
+SRC = main.c \
+      get_next_line.c
+
+
+all: $(NAME)
+
+$(LIBFT):
+	@make -C libft
+
+$(NAME):
 	@$(CC) $(SRC) $(LIBFT) $(GNL) $(CFLAGS) -o $(NAME)
 
-all: make
-
 clean:
-	@make clean -C libft
 	@rm -rf *.o
 
 fclean: clean
 	@make fclean -C libft
 	@rm -rf $(NAME)
-	@rm -rf ./libft ./get_next_line.c ./get_next_line.h
 
 re: fclean all
 .PHONY: clean fclean all re
